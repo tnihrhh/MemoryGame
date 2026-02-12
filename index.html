@@ -5,19 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>神経衰弱 - Memory Card Game</title>
 <style>
-/* ===== Reset & Base ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   font-family: 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
   background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-  color: #fff;
-  min-height: 100vh;
-  overflow-x: hidden;
+  color: #fff; min-height: 100vh; overflow-x: hidden;
 }
 .screen { display: none; min-height: 100vh; padding: 20px; }
 .screen.active { display: flex; flex-direction: column; align-items: center; }
-
-/* ===== Common UI ===== */
 .btn {
   border: none; border-radius: 12px; padding: 14px 32px; font-size: 18px;
   font-weight: 700; cursor: pointer; transition: all 0.2s; color: #fff;
@@ -41,7 +36,6 @@ body {
 h1 { font-size: 2.2em; margin-bottom: 10px; }
 h2 { font-size: 1.6em; margin-bottom: 10px; }
 
-/* ===== Start Screen ===== */
 #start-screen { justify-content: center; gap: 20px; text-align: center; }
 #start-screen h1 { font-size: 3em; background: linear-gradient(135deg, #ffd700, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .difficulty-buttons { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin: 10px 0; }
@@ -50,7 +44,6 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
 .best-scores { margin-top: 10px; font-size: 14px; opacity: 0.8; }
 .best-scores div { margin: 4px 0; }
 
-/* ===== Game Screen ===== */
 #game-screen { justify-content: flex-start; gap: 12px; }
 .game-header { width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
 .game-info { display: flex; gap: 16px; font-size: 16px; font-weight: 600; }
@@ -59,39 +52,28 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
 .timer-bar.warning { background: linear-gradient(90deg, #f7971e, #ffd200); }
 .timer-bar.danger { background: linear-gradient(90deg, #e44d26, #ff4444); animation: pulse-bar 0.5s infinite alternate; }
 @keyframes pulse-bar { to { opacity: 0.6; } }
-.card-grid {
-  display: grid; gap: 8px; justify-content: center; padding: 10px;
-  max-width: 600px; width: 100%;
-}
+.card-grid { display: grid; gap: 8px; justify-content: center; padding: 10px; max-width: 600px; width: 100%; }
 .card-grid.grid-4x2 { grid-template-columns: repeat(4, 1fr); }
 .card-grid.grid-4x4 { grid-template-columns: repeat(4, 1fr); }
 .card-grid.grid-6x6 { grid-template-columns: repeat(6, 1fr); }
 .card-cell { aspect-ratio: 1; perspective: 600px; }
-.card {
-  width: 100%; height: 100%; position: relative; cursor: pointer;
-  transform-style: preserve-3d; transition: transform 0.5s;
-}
+.card { width: 100%; height: 100%; position: relative; cursor: pointer; transform-style: preserve-3d; transition: transform 0.5s; }
 .card.flipped { transform: rotateY(180deg); }
 .card.matched { transform: rotateY(180deg); }
 .card.matched .card-front { box-shadow: 0 0 20px rgba(56,239,125,0.6); border-color: #38ef7d; }
 .card-face {
   position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
   border-radius: 12px; display: flex; align-items: center; justify-content: center;
-  font-size: min(8vw, 48px); border: 3px solid rgba(255,255,255,0.2);
+  border: 3px solid rgba(255,255,255,0.2);
 }
 .card-back {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: rgba(255,255,255,0.6); font-size: min(6vw, 36px); font-weight: 700;
 }
-.card-back::after {
-  content: '?'; position: absolute; font-size: inherit;
-}
-.card-front {
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
-  transform: rotateY(180deg);
-}
+.card-back::after { content: '?'; position: absolute; }
+.card-front { background: linear-gradient(135deg, #faf0e6, #fff5ee); transform: rotateY(180deg); padding: 8%; }
+.card-front svg { width: 100%; height: 100%; }
 
-/* ===== Result Screens ===== */
 #clear-screen, #gameover-screen { justify-content: center; gap: 20px; text-align: center; }
 .result-title { font-size: 2.5em; font-weight: 800; }
 .result-title.clear { color: #38ef7d; }
@@ -104,31 +86,16 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
 .result-details .total .value { color: #ffd700; }
 .result-buttons { display: flex; gap: 16px; }
 
-/* ===== Gacha Screen ===== */
 #gacha-screen { justify-content: center; gap: 20px; text-align: center; }
 .gacha-stage { width: 280px; height: 280px; position: relative; display: flex; align-items: center; justify-content: center; }
-.capsule {
-  width: 120px; height: 150px; position: relative; transition: transform 0.3s;
-}
-.capsule-top {
-  width: 120px; height: 75px; background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-  border-radius: 60px 60px 0 0; position: absolute; top: 0;
-  transition: transform 0.5s; transform-origin: bottom center;
-}
-.capsule-bottom {
-  width: 120px; height: 75px; background: linear-gradient(135deg, #ddd, #fff);
-  border-radius: 0 0 60px 60px; position: absolute; bottom: 0;
-}
-.capsule-line {
-  width: 120px; height: 6px; background: rgba(0,0,0,0.15);
-  position: absolute; top: 72px;
-}
+.capsule { width: 120px; height: 150px; position: relative; transition: transform 0.3s; }
+.capsule-top { width: 120px; height: 75px; background: linear-gradient(135deg, #ff6b6b, #ee5a24); border-radius: 60px 60px 0 0; position: absolute; top: 0; transition: transform 0.5s; transform-origin: bottom center; }
+.capsule-bottom { width: 120px; height: 75px; background: linear-gradient(135deg, #ddd, #fff); border-radius: 0 0 60px 60px; position: absolute; bottom: 0; }
+.capsule-line { width: 120px; height: 6px; background: rgba(0,0,0,0.15); position: absolute; top: 72px; }
 .gacha-stage.spinning .capsule { animation: capsule-spin 0.8s ease-in-out; }
 @keyframes capsule-spin {
-  0% { transform: rotate(0deg) scale(1); }
-  25% { transform: rotate(-15deg) scale(1.05); }
-  50% { transform: rotate(15deg) scale(1.1); }
-  75% { transform: rotate(-10deg) scale(1.05); }
+  0% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(-15deg) scale(1.05); }
+  50% { transform: rotate(15deg) scale(1.1); } 75% { transform: rotate(-10deg) scale(1.05); }
   100% { transform: rotate(0deg) scale(1); }
 }
 .gacha-stage.opening .capsule-top { transform: translateY(-50px) rotate(-30deg); opacity: 0; }
@@ -136,11 +103,8 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
 .gacha-result.show { display: block; }
 .gacha-result .new-badge { color: #ff6b6b; font-size: 24px; font-weight: 800; animation: bounce-in 0.5s; }
 .gacha-result .dup-badge { color: #aaa; font-size: 18px; }
-@keyframes bounce-in {
-  0% { transform: scale(0); } 50% { transform: scale(1.3); } 100% { transform: scale(1); }
-}
+@keyframes bounce-in { 0% { transform: scale(0); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
 .gacha-buttons { display: flex; gap: 12px; }
-/* Gacha flash effects */
 .gacha-flash { display: none; position: fixed; inset: 0; z-index: 100; pointer-events: none; }
 .gacha-flash.rare-flash { background: radial-gradient(circle, rgba(192,192,255,0.5), transparent 70%); animation: flash-anim 0.6s ease-out forwards; }
 .gacha-flash.sr-flash { background: radial-gradient(circle, rgba(255,215,0,0.6), transparent 70%); animation: flash-anim-sr 1s ease-out forwards; }
@@ -148,77 +112,59 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
 @keyframes flash-anim { 0% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes flash-anim-sr { 0% { opacity: 1; } 30% { opacity: 0.8; } 60% { opacity: 1; } 100% { opacity: 0; } }
 
-/* ===== Medal ===== */
 .medal-display {
   width: 120px; height: 120px; border-radius: 50%; position: relative;
-  display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;
-  overflow: hidden;
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;
+  overflow: hidden; background: #f8f0ff;
 }
+.medal-display svg { width: 85%; height: 85%; }
 .medal-display.rarity-normal { border: 4px solid #cd7f32; }
 .medal-display.rarity-rare { border: 4px solid #c0c0c0; box-shadow: 0 0 15px rgba(192,192,192,0.5); }
 .medal-display.rarity-sr { border: 4px solid #ffd700; box-shadow: 0 0 25px rgba(255,215,0,0.6); animation: sr-glow 1.5s infinite alternate; }
 @keyframes sr-glow { 0% { box-shadow: 0 0 15px rgba(255,215,0,0.4); } 100% { box-shadow: 0 0 35px rgba(255,215,0,0.8); } }
-.medal-pattern {
-  width: 100%; height: 100%; position: absolute; inset: 0;
-}
 .medal-name { font-size: 14px; font-weight: 600; margin-top: 4px; }
+.medal-no { font-size: 11px; opacity: 0.6; }
 .medal-rarity-label { font-size: 12px; font-weight: 700; margin-top: 2px; }
 .medal-rarity-label.normal { color: #cd7f32; }
 .medal-rarity-label.rare { color: #c0c0c0; }
 .medal-rarity-label.sr { color: #ffd700; }
 
-/* ===== Collection Screen ===== */
 #collection-screen { justify-content: flex-start; gap: 16px; }
 .collection-header { text-align: center; }
 .collection-progress { font-size: 20px; font-weight: 700; margin: 4px 0; }
 .collection-filters { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-.filter-btn {
-  padding: 8px 16px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.3);
-  background: transparent; color: #fff; cursor: pointer; font-size: 14px; font-weight: 600;
-  transition: all 0.2s;
-}
+.filter-btn { padding: 8px 16px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.3); background: transparent; color: #fff; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; }
 .filter-btn.active { background: rgba(255,255,255,0.2); border-color: #fff; }
-.collection-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 12px; width: 100%; max-width: 700px; padding: 10px;
-}
+.collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 12px; width: 100%; max-width: 750px; padding: 10px; }
+.collection-cell { text-align: center; }
 .collection-item {
-  aspect-ratio: 1; border-radius: 50%; display: flex; align-items: center;
+  width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center;
   justify-content: center; cursor: pointer; position: relative; overflow: hidden;
-  transition: transform 0.2s;
+  transition: transform 0.2s; margin: 0 auto; background: #f8f0ff;
 }
+.collection-item svg { width: 80%; height: 80%; }
 .collection-item:hover { transform: scale(1.1); }
-.collection-item.locked { filter: brightness(0.2) grayscale(1); cursor: default; }
+.collection-item.locked { filter: brightness(0.15) grayscale(1); cursor: default; }
 .collection-item.locked:hover { transform: none; }
 .collection-item.rarity-normal { border: 3px solid #cd7f32; }
 .collection-item.rarity-rare { border: 3px solid #c0c0c0; }
 .collection-item.rarity-sr { border: 3px solid #ffd700; }
-.collection-item .medal-pattern { width: 100%; height: 100%; }
+.collection-no { font-size: 11px; opacity: 0.6; margin-top: 2px; }
+.collection-name { font-size: 11px; opacity: 0.8; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
 
-/* Medal detail modal */
-.modal-overlay {
-  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-  z-index: 200; align-items: center; justify-content: center;
-}
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; }
 .modal-overlay.show { display: flex; }
-.modal-content {
-  background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 20px;
-  padding: 32px; text-align: center; max-width: 320px; width: 90%;
-  border: 1px solid rgba(255,255,255,0.15);
-}
+.modal-content { background: linear-gradient(135deg, #1a1a2e, #16213e); border-radius: 20px; padding: 32px; text-align: center; max-width: 320px; width: 90%; border: 1px solid rgba(255,255,255,0.15); }
 .modal-content .medal-display { width: 160px; height: 160px; }
 .modal-close { margin-top: 16px; }
 
-/* ===== Medal Patterns (CSS Art) ===== */
-/* Colors: 0-9 mapped in JS, Patterns: 0-9 mapped in JS */
-
-/* ===== Responsive ===== */
 @media (max-width: 480px) {
   h1 { font-size: 1.8em; }
   .btn { padding: 12px 24px; font-size: 16px; }
   .card-grid { gap: 5px; }
   .card-face { border-radius: 8px; border-width: 2px; }
-  .collection-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; }
+  .collection-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+  .collection-item { width: 64px; height: 64px; }
   .medal-display { width: 100px; height: 100px; }
   .gacha-stage { width: 220px; height: 220px; }
   .capsule { width: 100px; height: 125px; }
@@ -230,13 +176,11 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
 }
 @media (max-width: 360px) {
   .card-grid.grid-6x6 { gap: 3px; }
-  .card-face { font-size: min(6vw, 28px); }
 }
 </style>
 </head>
 <body>
 
-<!-- ===== Start Screen ===== -->
 <div id="start-screen" class="screen active">
   <h1>神経衰弱</h1>
   <p style="font-size:18px; opacity:0.8; margin-bottom:8px;">Memory Card Game</p>
@@ -248,13 +192,12 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
     <button class="btn btn-danger" onclick="startGame('hard')">Hard<br><small>6×6 / 180秒</small></button>
   </div>
   <div class="sub-buttons">
-    <button class="btn btn-warning" onclick="showScreen('gacha')">メダルガチャ<br><small>1000pt</small></button>
+    <button class="btn btn-warning" onclick="showScreen('gacha')">メダルガチャ<br><small>300pt</small></button>
     <button class="btn btn-info" onclick="showScreen('collection')">コレクション</button>
   </div>
   <div class="best-scores" id="best-scores"></div>
 </div>
 
-<!-- ===== Game Screen ===== -->
 <div id="game-screen" class="screen">
   <div class="game-header">
     <div class="game-info">
@@ -263,13 +206,10 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
     </div>
     <button class="btn btn-sm btn-danger" onclick="confirmQuit()">やめる</button>
   </div>
-  <div class="timer-bar-container">
-    <div class="timer-bar" id="timer-bar"></div>
-  </div>
+  <div class="timer-bar-container"><div class="timer-bar" id="timer-bar"></div></div>
   <div class="card-grid" id="card-grid"></div>
 </div>
 
-<!-- ===== Clear Screen ===== -->
 <div id="clear-screen" class="screen">
   <div class="result-title clear">CLEAR!</div>
   <div class="result-details">
@@ -288,7 +228,6 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
   </div>
 </div>
 
-<!-- ===== Game Over Screen ===== -->
 <div id="gameover-screen" class="screen">
   <div class="result-title gameover">TIME UP</div>
   <p style="font-size:20px; margin:10px 0;">制限時間を超えました</p>
@@ -304,7 +243,6 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
   </div>
 </div>
 
-<!-- ===== Gacha Screen ===== -->
 <div id="gacha-screen" class="screen">
   <h2>メダルガチャ</h2>
   <div class="points-display">ポイント: <span class="pts" id="gacha-points">0</span></div>
@@ -317,18 +255,18 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
   </div>
   <div class="gacha-result" id="gacha-result">
     <div id="gacha-medal-display"></div>
+    <div id="gacha-medal-no" class="medal-no" style="font-size:14px;"></div>
     <div id="gacha-medal-name" class="medal-name" style="font-size:18px;"></div>
     <div id="gacha-medal-rarity" class="medal-rarity-label" style="font-size:16px;"></div>
     <div id="gacha-badge"></div>
   </div>
   <div class="gacha-buttons">
-    <button class="btn btn-warning" id="gacha-btn" onclick="pullGacha()">ガチャを引く<br><small>1000pt</small></button>
+    <button class="btn btn-warning" id="gacha-btn" onclick="pullGacha()">ガチャを引く<br><small>300pt</small></button>
     <button class="btn btn-info" onclick="showScreen('start')">戻る</button>
   </div>
 </div>
 <div class="gacha-flash" id="gacha-flash"></div>
 
-<!-- ===== Collection Screen ===== -->
 <div id="collection-screen" class="screen">
   <div class="collection-header">
     <h2>メダルコレクション</h2>
@@ -344,22 +282,22 @@ h2 { font-size: 1.6em; margin-bottom: 10px; }
   <button class="btn btn-info" onclick="showScreen('start')" style="margin-top:12px;">戻る</button>
 </div>
 
-<!-- ===== Medal Detail Modal ===== -->
 <div class="modal-overlay" id="medal-modal" onclick="closeMedalModal(event)">
   <div class="modal-content">
     <div id="modal-medal-display"></div>
-    <div id="modal-medal-name" class="medal-name" style="font-size:22px; margin-top:12px;"></div>
+    <div id="modal-medal-no" class="medal-no" style="font-size:14px; margin-top:8px;"></div>
+    <div id="modal-medal-name" class="medal-name" style="font-size:22px; margin-top:4px;"></div>
     <div id="modal-medal-rarity" class="medal-rarity-label" style="font-size:16px;"></div>
-    <div id="modal-medal-id" style="font-size:12px; opacity:0.5; margin-top:8px;"></div>
-    <button class="btn btn-sm btn-info modal-close" onclick="closeMedalModal()">閉じる</button>
+    <button class="btn btn-sm btn-info modal-close" onclick="closeMedalModal()" style="margin-top:16px;">閉じる</button>
   </div>
 </div>
 
 <script>
 /* ================================================================
-   STATE & CONFIG
+   CONFIG
    ================================================================ */
-const EMOJIS = ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦'];
+const GACHA_COST = 300;
+const DUPLICATE_REFUND = 100;
 
 const DIFFICULTY = {
   easy:   { pairs: 4,  cols: 4, rows: 2, time: 60,  mult: 1, label: 'Easy' },
@@ -367,38 +305,678 @@ const DIFFICULTY = {
   hard:   { pairs: 18, cols: 6, rows: 6, time: 180, mult: 3, label: 'Hard' }
 };
 
-const MEDAL_COLORS = [
-  '#e74c3c','#e67e22','#f1c40f','#2ecc71','#1abc9c',
-  '#3498db','#9b59b6','#e84393','#fd79a8','#636e72'
+let state = { points: 0, bestScores: { easy: 0, normal: 0, hard: 0 }, medals: [] };
+let game = { difficulty: null, cards: [], flipped: [], matched: 0, moves: 0, totalPairs: 0, timeLeft: 0, totalTime: 0, timerId: null, locked: false };
+let gachaAnimating = false, currentFilter = 'all', lastDifficulty = 'normal';
+
+/* ================================================================
+   SVG HELPERS
+   ================================================================ */
+function S(tag, a) {
+  return `<${tag} ${Object.entries(a).map(([k,v])=>`${k}="${v}"`).join(' ')}/>`;
+}
+// Cute eyes with highlight
+function eyes(x1, y1, x2, y2, r) {
+  r = r || 4;
+  return S('circle',{cx:x1,cy:y1,r:r,fill:'#333'})+S('circle',{cx:x2,cy:y2,r:r,fill:'#333'})
+    +S('circle',{cx:x1+r*0.35,cy:y1-r*0.35,r:r*0.38,fill:'#fff'})
+    +S('circle',{cx:x2+r*0.35,cy:y2-r*0.35,r:r*0.38,fill:'#fff'});
+}
+// Blush circles
+function blush(x1, y1, x2, y2, r) {
+  r = r || 5;
+  return S('circle',{cx:x1,cy:y1,r:r,fill:'#FF69B4',opacity:'.3'})
+    +S('circle',{cx:x2,cy:y2,r:r,fill:'#FF69B4',opacity:'.3'});
+}
+// Smile
+function smile(cx, cy, w, sw) {
+  w = w || 6; sw = sw || 1.5;
+  return `<path d="M${cx-w},${cy} Q${cx},${cy+w} ${cx+w},${cy}" fill="none" stroke="#333" stroke-width="${sw}" stroke-linecap="round"/>`;
+}
+// Tiny nose
+function nose(cx, cy) { return S('ellipse',{cx:cx,cy:cy,rx:3,ry:2,fill:'#FF69B4'}); }
+// Wrap in SVG
+function svg(inner) { return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`; }
+
+/* ================================================================
+   CARD SVG DESIGNS (18 cute illustrations)
+   ================================================================ */
+const CARD_DESIGNS = [
+  // 0: Cat
+  function(){ return svg(
+    `<polygon points="18,38 30,6 42,38" fill="#FFB6C1"/><polygon points="58,38 70,6 82,38" fill="#FFB6C1"/>`+
+    S('circle',{cx:50,cy:56,r:36,fill:'#FFB6C1'})+eyes(38,48,62,48)+nose(50,57)+smile(50,63)+
+    blush(28,62,72,62)+
+    `<line x1="12" y1="54" x2="30" y2="56" stroke="#daa" stroke-width="1.2"/><line x1="12" y1="60" x2="30" y2="60" stroke="#daa" stroke-width="1.2"/><line x1="70" y1="56" x2="88" y2="54" stroke="#daa" stroke-width="1.2"/><line x1="70" y1="60" x2="88" y2="60" stroke="#daa" stroke-width="1.2"/>`
+  );},
+  // 1: Dog
+  function(){ return svg(
+    `<ellipse cx="22" cy="42" rx="15" ry="24" fill="#C4A77D" transform="rotate(-15,22,42)"/><ellipse cx="78" cy="42" rx="15" ry="24" fill="#C4A77D" transform="rotate(15,78,42)"/>`+
+    S('circle',{cx:50,cy:56,r:36,fill:'#DEB887'})+
+    S('ellipse',{cx:50,cy:66,rx:14,ry:10,fill:'#FFF5E1'})+
+    eyes(38,48,62,48)+S('ellipse',{cx:50,cy:60,rx:4,ry:3,fill:'#333'})+smile(50,66)+blush(28,60,72,60)+
+    `<ellipse cx="50" cy="70" rx="3" ry="2" fill="#FF69B4"/>`
+  );},
+  // 2: Rabbit
+  function(){ return svg(
+    `<ellipse cx="35" cy="22" rx="10" ry="28" fill="#fff" stroke="#fcc" stroke-width="1"/><ellipse cx="35" cy="22" rx="5" ry="20" fill="#fcc"/>`+
+    `<ellipse cx="65" cy="22" rx="10" ry="28" fill="#fff" stroke="#fcc" stroke-width="1"/><ellipse cx="65" cy="22" rx="5" ry="20" fill="#fcc"/>`+
+    S('circle',{cx:50,cy:60,r:34,fill:'#fff',stroke:'#fcc','stroke-width':'1'})+
+    eyes(40,52,60,52)+nose(50,60)+smile(50,65)+blush(30,64,70,64)
+  );},
+  // 3: Bear
+  function(){ return svg(
+    S('circle',{cx:24,cy:28,r:14,fill:'#8B6914'})+S('circle',{cx:24,cy:28,r:8,fill:'#D4A843'})+
+    S('circle',{cx:76,cy:28,r:14,fill:'#8B6914'})+S('circle',{cx:76,cy:28,r:8,fill:'#D4A843'})+
+    S('circle',{cx:50,cy:56,r:36,fill:'#8B6914'})+
+    S('ellipse',{cx:50,cy:64,rx:16,ry:12,fill:'#D4A843'})+
+    eyes(38,48,62,48)+S('ellipse',{cx:50,cy:58,rx:4,ry:3,fill:'#333'})+smile(50,66)+blush(28,60,72,60)
+  );},
+  // 4: Panda
+  function(){ return svg(
+    S('circle',{cx:24,cy:28,r:14,fill:'#333'})+S('circle',{cx:76,cy:28,r:14,fill:'#333'})+
+    S('circle',{cx:50,cy:56,r:36,fill:'#fff'})+
+    S('ellipse',{cx:38,cy:48,rx:12,ry:10,fill:'#333'})+S('ellipse',{cx:62,cy:48,rx:12,ry:10,fill:'#333'})+
+    S('circle',{cx:38,cy:48,r:3.5,fill:'#fff'})+S('circle',{cx:62,cy:48,r:3.5,fill:'#fff'})+
+    S('circle',{cx:39,cy:47,r:1.3,fill:'#333'})+S('circle',{cx:63,cy:47,r:1.3,fill:'#333'})+
+    S('ellipse',{cx:50,cy:58,rx:4,ry:3,fill:'#333'})+smile(50,64)+blush(28,62,72,62)
+  );},
+  // 5: Fox
+  function(){ return svg(
+    `<polygon points="14,42 28,4 42,42" fill="#FF8C00"/><polygon points="58,42 72,4 86,42" fill="#FF8C00"/>`+
+    `<polygon points="20,38 28,12 36,38" fill="#fff"/><polygon points="64,38 72,12 80,38" fill="#fff"/>`+
+    S('circle',{cx:50,cy:58,r:35,fill:'#FF8C00'})+
+    S('ellipse',{cx:50,cy:68,rx:18,ry:12,fill:'#fff'})+
+    eyes(38,50,62,50)+S('ellipse',{cx:50,cy:60,rx:3,ry:2.5,fill:'#333'})+smile(50,66)+blush(28,62,72,62)
+  );},
+  // 6: Chick
+  function(){ return svg(
+    S('circle',{cx:50,cy:54,r:36,fill:'#FFD700'})+
+    `<polygon points="42,56 50,66 58,56" fill="#FF8C00"/>`+
+    eyes(40,46,60,46,3.5)+blush(30,56,70,56)+
+    `<polygon points="44,14 50,4 56,14" fill="#FFD700"/><polygon points="48,16 50,8 52,16" fill="#FFA500"/>`+
+    S('ellipse',{cx:30,cy:64,rx:12,ry:6,fill:'#FFE44D',transform:'rotate(-20,30,64)'})+
+    S('ellipse',{cx:70,cy:64,rx:12,ry:6,fill:'#FFE44D',transform:'rotate(20,70,64)'})
+  );},
+  // 7: Penguin
+  function(){ return svg(
+    S('ellipse',{cx:50,cy:55,rx:34,ry:38,fill:'#2C3E50'})+
+    S('ellipse',{cx:50,cy:60,rx:22,ry:28,fill:'#fff'})+
+    eyes(40,44,60,44,3.5)+
+    `<polygon points="44,52 50,60 56,52" fill="#FF8C00"/>`+
+    blush(32,54,68,54)+
+    S('ellipse',{cx:22,cy:60,rx:8,ry:14,fill:'#2C3E50',transform:'rotate(-10,22,60)'})+
+    S('ellipse',{cx:78,cy:60,rx:8,ry:14,fill:'#2C3E50',transform:'rotate(10,78,60)'})+
+    S('ellipse',{cx:40,cy:88,rx:10,ry:4,fill:'#FF8C00'})+S('ellipse',{cx:60,cy:88,rx:10,ry:4,fill:'#FF8C00'})
+  );},
+  // 8: Fish
+  function(){ return svg(
+    `<polygon points="80,50 96,38 96,62" fill="#5DADE2"/>`+
+    S('ellipse',{cx:48,cy:50,rx:36,ry:24,fill:'#5DADE2'})+
+    S('ellipse',{cx:48,cy:50,rx:30,ry:18,fill:'#85C1E9'})+
+    S('circle',{cx:34,cy:44,r:5,fill:'#fff'})+S('circle',{cx:35,cy:44,r:3,fill:'#333'})+S('circle',{cx:36,cy:43,r:1,fill:'#fff'})+
+    blush(26,52,46,54)+smile(36,54,4)+
+    `<ellipse cx="52" cy="34" rx="10" ry="5" fill="#3498DB" transform="rotate(-20,52,34)"/>`
+  );},
+  // 9: Octopus
+  function(){ return svg(
+    S('ellipse',{cx:50,cy:40,rx:32,ry:28,fill:'#E8A0BF'})+
+    eyes(40,36,60,36)+smile(50,46)+blush(30,44,70,44)+
+    `<path d="M22,55 Q18,75 24,80 Q28,72 30,55" fill="#E8A0BF"/>`+
+    `<path d="M30,58 Q28,78 34,82 Q36,74 38,58" fill="#E8A0BF"/>`+
+    `<path d="M40,60 Q40,82 46,84 Q46,76 46,60" fill="#E8A0BF"/>`+
+    `<path d="M54,60 Q54,82 60,84 Q60,76 60,60" fill="#E8A0BF"/>`+
+    `<path d="M62,58 Q64,78 70,82 Q70,74 70,58" fill="#E8A0BF"/>`+
+    `<path d="M70,55 Q74,75 80,80 Q78,72 78,55" fill="#E8A0BF"/>`
+  );},
+  // 10: Whale
+  function(){ return svg(
+    S('ellipse',{cx:50,cy:50,rx:40,ry:30,fill:'#5B8DEF'})+
+    S('ellipse',{cx:50,cy:58,rx:28,ry:14,fill:'#A8D1F0'})+
+    `<polygon points="85,40 98,28 96,52" fill="#5B8DEF"/>`+
+    S('circle',{cx:34,cy:42,r:4,fill:'#fff'})+S('circle',{cx:35,cy:42,r:2.5,fill:'#333'})+
+    blush(28,52,48,54)+smile(38,54,4)+
+    `<path d="M52,22 Q50,10 46,18 M52,22 Q54,10 58,18" fill="none" stroke="#87CEEB" stroke-width="2.5" stroke-linecap="round"/>`
+  );},
+  // 11: Butterfly
+  function(){ return svg(
+    `<ellipse cx="30" cy="42" rx="22" ry="18" fill="#DDA0DD" opacity=".85"/>`+
+    `<ellipse cx="70" cy="42" rx="22" ry="18" fill="#DDA0DD" opacity=".85"/>`+
+    `<ellipse cx="34" cy="60" rx="14" ry="12" fill="#E8B4E8" opacity=".85"/>`+
+    `<ellipse cx="66" cy="60" rx="14" ry="12" fill="#E8B4E8" opacity=".85"/>`+
+    S('circle',{cx:30,cy:42,r:5,fill:'#C586C0'})+S('circle',{cx:70,cy:42,r:5,fill:'#C586C0'})+
+    `<line x1="50" y1="28" x2="50" y2="76" stroke="#8B6C8B" stroke-width="3" stroke-linecap="round"/>`+
+    `<line x1="50" y1="28" x2="40" y2="18" stroke="#8B6C8B" stroke-width="2" stroke-linecap="round"/>`+
+    `<line x1="50" y1="28" x2="60" y2="18" stroke="#8B6C8B" stroke-width="2" stroke-linecap="round"/>`+
+    S('circle',{cx:40,cy:16,r:3,fill:'#DDA0DD'})+S('circle',{cx:60,cy:16,r:3,fill:'#DDA0DD'})
+  );},
+  // 12: Flower
+  function(){ return svg(
+    S('ellipse',{cx:50,cy:30,rx:14,ry:16,fill:'#FFB7C5'})+
+    S('ellipse',{cx:30,cy:45,rx:14,ry:16,fill:'#FFB7C5',transform:'rotate(-72,30,45)'})+
+    S('ellipse',{cx:36,cy:68,rx:14,ry:16,fill:'#FFB7C5',transform:'rotate(-144,36,68)'})+
+    S('ellipse',{cx:64,cy:68,rx:14,ry:16,fill:'#FFB7C5',transform:'rotate(-216,64,68)'})+
+    S('ellipse',{cx:70,cy:45,rx:14,ry:16,fill:'#FFB7C5',transform:'rotate(-288,70,45)'})+
+    S('circle',{cx:50,cy:50,r:14,fill:'#FFE066'})+
+    eyes(45,48,55,48,2.5)+smile(50,53,3,1)
+  );},
+  // 13: Star
+  function(){
+    return svg(
+      `<polygon points="50,8 61,38 94,38 67,56 78,88 50,70 22,88 33,56 6,38 39,38" fill="#FFD700"/>`+
+      eyes(42,46,58,46,3)+smile(50,54,4)+blush(34,52,66,52,4)
+    );
+  },
+  // 14: Heart
+  function(){ return svg(
+    `<path d="M50,85 C20,65 2,40 20,24 C32,12 48,18 50,30 C52,18 68,12 80,24 C98,40 80,65 50,85Z" fill="#FF6B81"/>`+
+    eyes(40,42,60,42,3)+smile(50,52,4)+blush(30,50,70,50,4)
+  );},
+  // 15: Cake
+  function(){ return svg(
+    `<rect x="20" y="45" width="60" height="35" rx="4" fill="#FFF0DB"/>`+
+    `<rect x="20" y="45" width="60" height="12" rx="4" fill="#FFB6C1"/>`+
+    `<path d="M18,45 Q30,38 40,42 Q50,36 60,42 Q70,38 82,45" fill="#fff" stroke="#FFB6C1" stroke-width="1"/>`+
+    S('circle',{cx:50,cy:36,r:8,fill:'#FF4444'})+S('ellipse',{cx:50,cy:34,rx:5,ry:2,fill:'#FF6666'})+
+    `<rect x="48" y="28" width="4" height="10" rx="1" fill="#90EE90"/>`+
+    eyes(38,58,62,58,2.5)+smile(50,64,4,1)+blush(28,64,72,64,3)
+  );},
+  // 16: Apple
+  function(){ return svg(
+    `<path d="M50,88 C22,88 8,62 14,42 C20,22 38,18 50,30 C62,18 80,22 86,42 C92,62 78,88 50,88Z" fill="#FF4444"/>`+
+    `<path d="M50,30 Q55,10 62,14" fill="none" stroke="#8B4513" stroke-width="3" stroke-linecap="round"/>`+
+    `<ellipse cx="62" cy="14" rx="10" ry="6" fill="#4CAF50" transform="rotate(20,62,14)"/>`+
+    eyes(38,48,62,48,3)+smile(50,58,4)+blush(28,56,72,56,4)+
+    S('ellipse',{cx:32,cy:42,rx:6,ry:10,fill:'#FF6666',opacity:'.4'})
+  );},
+  // 17: Moon
+  function(){ return svg(
+    `<circle cx="50" cy="50" r="38" fill="#FFE87C"/>`+
+    `<circle cx="66" cy="38" r="28" fill="transparent"/>`+
+    S('circle',{cx:36,cy:42,r:4,fill:'#F5D060',opacity:'.5'})+
+    S('circle',{cx:56,cy:56,r:6,fill:'#F5D060',opacity:'.4'})+
+    S('circle',{cx:42,cy:62,r:3,fill:'#F5D060',opacity:'.5'})+
+    eyes(38,46,54,46,3)+smile(46,55,4)+blush(28,54,60,54,4)
+  );}
 ];
 
-const MEDAL_PATTERN_NAMES = [
-  '放射','同心円','ストライプ','ドット','チェック',
-  '波','菱形','星形','渦巻き','格子'
-];
+/* ================================================================
+   MEDAL SVG TEMPLATES
+   ================================================================ */
+function svgCat(b, inner) {
+  inner = inner || '#FF69B4';
+  return svg(
+    `<polygon points="18,38 30,6 42,38" fill="${b}"/><polygon points="58,38 70,6 82,38" fill="${b}"/>`+
+    `<polygon points="22,36 30,14 38,36" fill="${inner}"/><polygon points="62,36 70,14 78,36" fill="${inner}"/>`+
+    S('circle',{cx:50,cy:56,r:36,fill:b})+eyes(38,48,62,48)+nose(50,57)+smile(50,63)+
+    blush(28,62,72,62)+
+    `<line x1="12" y1="54" x2="30" y2="56" stroke="#ccc" stroke-width="1.2"/><line x1="12" y1="60" x2="30" y2="60" stroke="#ccc" stroke-width="1.2"/><line x1="70" y1="56" x2="88" y2="54" stroke="#ccc" stroke-width="1.2"/><line x1="70" y1="60" x2="88" y2="60" stroke="#ccc" stroke-width="1.2"/>`
+  );
+}
+function svgDog(b, ear) {
+  ear = ear || '#A0845C';
+  return svg(
+    `<ellipse cx="22" cy="42" rx="15" ry="24" fill="${ear}" transform="rotate(-15,22,42)"/><ellipse cx="78" cy="42" rx="15" ry="24" fill="${ear}" transform="rotate(15,78,42)"/>`+
+    S('circle',{cx:50,cy:56,r:36,fill:b})+S('ellipse',{cx:50,cy:66,rx:14,ry:10,fill:'#FFF5E1'})+
+    eyes(38,48,62,48)+S('ellipse',{cx:50,cy:60,rx:4,ry:3,fill:'#333'})+smile(50,68)+blush(28,60,72,60)
+  );
+}
+function svgRabbit(b, inner) {
+  inner = inner || '#fcc';
+  return svg(
+    `<ellipse cx="35" cy="20" rx="10" ry="28" fill="${b}"/><ellipse cx="35" cy="20" rx="5" ry="20" fill="${inner}"/>`+
+    `<ellipse cx="65" cy="20" rx="10" ry="28" fill="${b}"/><ellipse cx="65" cy="20" rx="5" ry="20" fill="${inner}"/>`+
+    S('circle',{cx:50,cy:60,r:34,fill:b})+eyes(40,52,60,52)+nose(50,60)+smile(50,66)+blush(30,64,70,64)
+  );
+}
+function svgBear(b, inner) {
+  inner = inner || '#D4A843';
+  return svg(
+    S('circle',{cx:24,cy:28,r:14,fill:b})+S('circle',{cx:24,cy:28,r:8,fill:inner})+
+    S('circle',{cx:76,cy:28,r:14,fill:b})+S('circle',{cx:76,cy:28,r:8,fill:inner})+
+    S('circle',{cx:50,cy:56,r:36,fill:b})+S('ellipse',{cx:50,cy:64,rx:16,ry:12,fill:inner})+
+    eyes(38,48,62,48)+S('ellipse',{cx:50,cy:58,rx:4,ry:3,fill:'#333'})+smile(50,66)+blush(28,60,72,60)
+  );
+}
+function svgHamster(b, cheek) {
+  cheek = cheek || '#FFDAB9';
+  return svg(
+    S('circle',{cx:26,cy:34,r:10,fill:b})+S('circle',{cx:26,cy:34,r:5,fill:'#fcc'})+
+    S('circle',{cx:74,cy:34,r:10,fill:b})+S('circle',{cx:74,cy:34,r:5,fill:'#fcc'})+
+    S('circle',{cx:50,cy:56,r:36,fill:b})+
+    S('circle',{cx:28,cy:60,r:12,fill:cheek})+S('circle',{cx:72,cy:60,r:12,fill:cheek})+
+    eyes(40,48,60,48,3.5)+nose(50,56)+smile(50,62)+blush(28,62,72,62,3)
+  );
+}
+function svgPenguin(b) {
+  return svg(
+    S('ellipse',{cx:50,cy:55,rx:34,ry:38,fill:b})+S('ellipse',{cx:50,cy:60,rx:22,ry:28,fill:'#fff'})+
+    eyes(40,44,60,44,3.5)+`<polygon points="44,52 50,60 56,52" fill="#FF8C00"/>`+blush(32,54,68,54)+
+    S('ellipse',{cx:22,cy:60,rx:8,ry:14,fill:b,transform:'rotate(-10,22,60)'})+
+    S('ellipse',{cx:78,cy:60,rx:8,ry:14,fill:b,transform:'rotate(10,78,60)'})
+  );
+}
+function svgChick(b) {
+  return svg(
+    S('circle',{cx:50,cy:54,r:36,fill:b})+`<polygon points="42,56 50,66 58,56" fill="#FF8C00"/>`+
+    eyes(40,46,60,46,3.5)+blush(30,56,70,56)+
+    `<polygon points="44,14 50,4 56,14" fill="${b}"/><polygon points="48,16 50,8 52,16" fill="#FFA500"/>`+
+    S('ellipse',{cx:30,cy:64,rx:12,ry:6,fill:b,transform:'rotate(-20,30,64)',opacity:'.7'})+
+    S('ellipse',{cx:70,cy:64,rx:12,ry:6,fill:b,transform:'rotate(20,70,64)',opacity:'.7'})
+  );
+}
+function svgOwl(b, belly) {
+  belly = belly || '#FFF5E1';
+  return svg(
+    `<polygon points="22,30 30,10 38,30" fill="${b}"/><polygon points="62,30 70,10 78,30" fill="${b}"/>`+
+    S('ellipse',{cx:50,cy:55,rx:34,ry:36,fill:b})+S('ellipse',{cx:50,cy:62,rx:20,ry:22,fill:belly})+
+    S('circle',{cx:38,cy:44,r:12,fill:'#fff'})+S('circle',{cx:62,cy:44,r:12,fill:'#fff'})+
+    S('circle',{cx:38,cy:44,r:5,fill:'#333'})+S('circle',{cx:62,cy:44,r:5,fill:'#333'})+
+    S('circle',{cx:39.5,cy:42.5,r:2,fill:'#fff'})+S('circle',{cx:63.5,cy:42.5,r:2,fill:'#fff'})+
+    `<polygon points="46,54 50,62 54,54" fill="#FF8C00"/>`+blush(28,58,72,58)
+  );
+}
+function svgFish(b, fin) {
+  fin = fin || '#3498DB';
+  return svg(
+    `<polygon points="82,50 98,36 98,64" fill="${b}"/>`+
+    S('ellipse',{cx:48,cy:50,rx:36,ry:24,fill:b})+S('ellipse',{cx:44,cy:50,rx:28,ry:16,fill:fin})+
+    S('circle',{cx:32,cy:44,r:5,fill:'#fff'})+S('circle',{cx:33,cy:44,r:3,fill:'#333'})+S('circle',{cx:34,cy:43,r:1,fill:'#fff'})+
+    blush(26,52,44,54)+smile(36,54,4)+
+    `<ellipse cx="54" cy="34" rx="10" ry="5" fill="${b}" transform="rotate(-20,54,34)"/>`
+  );
+}
+function svgOctopus(b) {
+  return svg(
+    S('ellipse',{cx:50,cy:40,rx:32,ry:28,fill:b})+eyes(40,36,60,36)+smile(50,46)+blush(30,44,70,44)+
+    `<path d="M22,55 Q18,75 24,80 Q28,72 30,55" fill="${b}"/><path d="M30,58 Q28,78 34,82 Q36,74 38,58" fill="${b}"/>`+
+    `<path d="M40,60 Q40,82 46,84 Q46,76 46,60" fill="${b}"/><path d="M54,60 Q54,82 60,84 Q60,76 60,60" fill="${b}"/>`+
+    `<path d="M62,58 Q64,78 70,82 Q70,74 70,58" fill="${b}"/><path d="M70,55 Q74,75 80,80 Q78,72 78,55" fill="${b}"/>`
+  );
+}
+function svgCake(top, body) {
+  body = body || '#FFF0DB';
+  return svg(
+    `<rect x="20" y="45" width="60" height="35" rx="4" fill="${body}"/>`+
+    `<rect x="20" y="45" width="60" height="12" rx="4" fill="${top}"/>`+
+    `<path d="M18,45 Q30,38 40,42 Q50,36 60,42 Q70,38 82,45" fill="#fff" stroke="${top}" stroke-width="1"/>`+
+    S('circle',{cx:50,cy:36,r:8,fill:'#FF4444'})+S('ellipse',{cx:50,cy:34,rx:5,ry:2,fill:'#FF6666'})+
+    `<rect x="48" y="28" width="4" height="10" rx="1" fill="#90EE90"/>`+
+    eyes(38,58,62,58,2.5)+smile(50,64,4,1)+blush(28,64,72,64,3)
+  );
+}
+function svgDonut(glaze) {
+  return svg(
+    S('circle',{cx:50,cy:50,r:36,fill:'#D2691E'})+
+    `<path d="M50,16 A34,34 0 1,1 49.99,16" fill="${glaze}" stroke="none"/>`+
+    S('circle',{cx:50,cy:50,r:14,fill:'#24243e'})+
+    S('circle',{cx:34,cy:30,r:2,fill:'#FF69B4'})+S('circle',{cx:58,cy:22,r:2,fill:'#87CEEB'})+
+    S('circle',{cx:72,cy:40,r:2,fill:'#FFD700'})+S('circle',{cx:70,cy:62,r:2,fill:'#90EE90'})+
+    S('circle',{cx:30,cy:60,r:2,fill:'#FF69B4'})+S('circle',{cx:42,cy:20,r:2,fill:'#DDA0DD'})
+  );
+}
+function svgIceCream(scoop, cone) {
+  cone = cone || '#D2B48C';
+  return svg(
+    `<polygon points="34,55 66,55 50,92" fill="${cone}"/>`+
+    `<line x1="38" y1="60" x2="54" y2="85" stroke="#C4A87A" stroke-width="1"/>`+
+    `<line x1="62" y1="60" x2="48" y2="85" stroke="#C4A87A" stroke-width="1"/>`+
+    S('circle',{cx:50,cy:42,r:22,fill:scoop})+
+    S('circle',{cx:50,cy:36,r:4,fill:scoop,opacity:'.6'})+
+    eyes(42,40,58,40,2.5)+smile(50,47,3,1)+blush(36,46,64,46,3)
+  );
+}
+function svgFruit(shape, color, leafX) {
+  // Generic round fruit
+  leafX = leafX || 55;
+  return svg(
+    S('circle',{cx:50,cy:55,r:32,fill:color})+
+    `<path d="M50,24 Q${leafX},10 ${leafX+8},18" fill="none" stroke="#8B4513" stroke-width="3" stroke-linecap="round"/>`+
+    `<ellipse cx="${leafX+6}" cy="16" rx="8" ry="5" fill="#4CAF50" transform="rotate(15,${leafX+6},16)"/>`+
+    eyes(42,50,58,50,3)+smile(50,60,4)+blush(32,58,68,58,4)+
+    S('ellipse',{cx:36,cy:44,rx:5,ry:8,fill:'#fff',opacity:'.2'})
+  );
+}
+function svgStrawberry(b) {
+  b = b || '#FF4444';
+  return svg(
+    `<path d="M50,88 C22,78 12,52 22,34 C32,16 50,20 50,20 C50,20 68,16 78,34 C88,52 78,78 50,88Z" fill="${b}"/>`+
+    `<ellipse cx="42" cy="12" rx="12" ry="6" fill="#4CAF50" transform="rotate(-15,42,12)"/>`+
+    `<ellipse cx="58" cy="12" rx="12" ry="6" fill="#4CAF50" transform="rotate(15,58,12)"/>`+
+    S('circle',{cx:38,cy:52,r:2,fill:'#FFD700'})+S('circle',{cx:50,cy:58,r:2,fill:'#FFD700'})+
+    S('circle',{cx:62,cy:52,r:2,fill:'#FFD700'})+S('circle',{cx:44,cy:66,r:2,fill:'#FFD700'})+
+    S('circle',{cx:56,cy:66,r:2,fill:'#FFD700'})+S('circle',{cx:50,cy:44,r:2,fill:'#FFD700'})+
+    eyes(42,40,58,40,3)+smile(50,48,3)+blush(32,46,68,46,3)
+  );
+}
+function svgCherry() {
+  return svg(
+    `<path d="M40,40 Q50,10 60,40" fill="none" stroke="#6B8E23" stroke-width="3" stroke-linecap="round"/>`+
+    `<ellipse cx="50" cy="16" rx="10" ry="5" fill="#6B8E23"/>`+
+    S('circle',{cx:36,cy:58,r:22,fill:'#DC143C'})+S('circle',{cx:66,cy:54,r:20,fill:'#FF1744'})+
+    S('ellipse',{cx:28,cy:50,rx:5,ry:8,fill:'#FF4466',opacity:'.4'})+
+    S('ellipse',{cx:58,cy:46,rx:4,ry:7,fill:'#FF5577',opacity:'.4'})+
+    eyes(30,56,42,56,2)+smile(36,62,3,1)+eyes(60,52,72,52,2)+smile(66,58,3,1)
+  );
+}
+function svgFlower(petal, center) {
+  center = center || '#FFE066';
+  return svg(
+    S('ellipse',{cx:50,cy:26,rx:14,ry:16,fill:petal})+
+    S('ellipse',{cx:28,cy:42,rx:14,ry:16,fill:petal,transform:'rotate(72,50,50)'})+
+    S('ellipse',{cx:36,cy:68,rx:14,ry:16,fill:petal,transform:'rotate(144,50,50)'})+
+    S('ellipse',{cx:64,cy:68,rx:14,ry:16,fill:petal,transform:'rotate(216,50,50)'})+
+    S('ellipse',{cx:72,cy:42,rx:14,ry:16,fill:petal,transform:'rotate(288,50,50)'})+
+    S('circle',{cx:50,cy:50,r:14,fill:center})+eyes(45,48,55,48,2.5)+smile(50,53,3,1)
+  );
+}
+function svgMushroom(cap, stem) {
+  stem = stem || '#FFF5E1';
+  return svg(
+    `<rect x="38" y="52" width="24" height="34" rx="8" fill="${stem}"/>`+
+    `<ellipse cx="50" cy="50" rx="38" ry="28" fill="${cap}"/>`+
+    S('circle',{cx:34,cy:40,r:7,fill:'#fff',opacity:'.7'})+S('circle',{cx:60,cy:36,r:5,fill:'#fff',opacity:'.7'})+
+    S('circle',{cx:50,cy:46,r:4,fill:'#fff',opacity:'.7'})+
+    eyes(40,48,60,48,3)+smile(50,56,4)+blush(30,56,70,56,4)
+  );
+}
+function svgUnicorn(b, horn, mane) {
+  horn = horn || '#FFD700'; mane = mane || '#FF69B4';
+  return svg(
+    S('circle',{cx:50,cy:56,r:36,fill:b})+
+    `<polygon points="48,12 50,0 52,12 56,22 44,22" fill="${horn}"/>`+
+    `<ellipse cx="28" cy="32" rx="16" ry="8" fill="${mane}" transform="rotate(-30,28,32)"/>`+
+    `<ellipse cx="22" cy="42" rx="14" ry="6" fill="${mane}" transform="rotate(-20,22,42)"/>`+
+    `<ellipse cx="20" cy="52" rx="12" ry="5" fill="${mane}" transform="rotate(-10,20,52)"/>`+
+    eyes(38,50,58,50)+nose(48,60)+smile(48,66)+blush(28,62,68,62)+
+    S('circle',{cx:50,cy:10,r:3,fill:'#fff',opacity:'.6'})
+  );
+}
+function svgDragon(b, belly, horn) {
+  belly = belly || '#FFE4B5'; horn = horn || '#FFD700';
+  return svg(
+    `<polygon points="20,26 28,8 36,26" fill="${horn}"/><polygon points="64,26 72,8 80,26" fill="${horn}"/>`+
+    S('circle',{cx:50,cy:54,r:36,fill:b})+S('ellipse',{cx:50,cy:64,rx:18,ry:14,fill:belly})+
+    S('circle',{cx:36,cy:44,r:8,fill:'#fff'})+S('circle',{cx:64,cy:44,r:8,fill:'#fff'})+
+    S('circle',{cx:38,cy:44,r:4,fill:b})+S('circle',{cx:66,cy:44,r:4,fill:b})+
+    S('circle',{cx:39,cy:43,r:1.5,fill:'#fff'})+S('circle',{cx:67,cy:43,r:1.5,fill:'#fff'})+
+    S('ellipse',{cx:44,cy:58,rx:2,ry:2.5,fill:'#333'})+S('ellipse',{cx:56,cy:58,rx:2,ry:2.5,fill:'#333'})+
+    smile(50,66)+blush(28,62,72,62)
+  );
+}
+function svgGhost(b) {
+  return svg(
+    `<path d="M20,90 L20,46 A30,30 0 0,1 80,46 L80,90 L70,80 L60,90 L50,80 L40,90 L30,80 Z" fill="${b}"/>`+
+    eyes(38,48,62,48,5)+smile(50,60)+blush(28,58,72,58)
+  );
+}
+function svgSlime(b) {
+  return svg(
+    `<ellipse cx="50" cy="68" rx="40" ry="22" fill="${b}" opacity=".5"/>`+
+    `<path d="M16,56 Q14,30 30,18 Q44,8 50,12 Q56,8 70,18 Q86,30 84,56 Q80,72 50,76 Q20,72 16,56Z" fill="${b}"/>`+
+    eyes(38,40,62,40,4)+smile(50,52)+blush(28,50,72,50)+
+    S('ellipse',{cx:30,cy:32,rx:6,ry:10,fill:'#fff',opacity:'.3'})
+  );
+}
+function svgFairy(b, wing) {
+  wing = wing || '#E8F5E9';
+  return svg(
+    `<ellipse cx="30" cy="46" rx="18" ry="24" fill="${wing}" opacity=".6" transform="rotate(-15,30,46)"/>`+
+    `<ellipse cx="70" cy="46" rx="18" ry="24" fill="${wing}" opacity=".6" transform="rotate(15,70,46)"/>`+
+    S('circle',{cx:50,cy:42,r:18,fill:'#FFDAB9'})+
+    `<path d="M38,58 Q34,86 42,88 Q44,72 50,60 Q56,72 58,88 Q66,86 62,58" fill="${b}"/>`+
+    eyes(44,40,56,40,2.5)+smile(50,48,3,1)+blush(38,46,62,46,3)+
+    `<circle cx="50" cy="22" r="4" fill="${wing}"/><line x1="50" y1="22" x2="50" y2="26" stroke="${wing}" stroke-width="1.5"/>`
+  );
+}
+function svgMermaid(hair, tail) {
+  return svg(
+    `<ellipse cx="50" cy="78" rx="16" ry="14" fill="${tail}"/>`+
+    `<path d="M38,76 Q30,92 34,96 Q40,88 42,80" fill="${tail}"/>`+
+    `<path d="M62,76 Q70,92 66,96 Q60,88 58,80" fill="${tail}"/>`+
+    `<rect x="38" y="54" width="24" height="28" rx="8" fill="#FFDAB9"/>`+
+    S('circle',{cx:50,cy:40,r:20,fill:'#FFDAB9'})+
+    `<ellipse cx="34" cy="30" rx="16" ry="18" fill="${hair}"/><ellipse cx="66" cy="30" rx="16" ry="18" fill="${hair}"/>`+
+    `<path d="M30,30 Q50,10 70,30" fill="${hair}"/>`+
+    eyes(44,40,56,40,2.5)+smile(50,48,3,1)+blush(38,46,62,46,3)
+  );
+}
+function svgStar(b, outline) {
+  outline = outline || b;
+  return svg(
+    `<polygon points="50,6 61,38 96,38 68,58 78,90 50,70 22,90 32,58 4,38 39,38" fill="${b}" stroke="${outline}" stroke-width="2"/>`+
+    eyes(42,46,58,46,3)+smile(50,54,4)+blush(34,52,66,52,4)
+  );
+}
+function svgMoon(b) {
+  return svg(
+    S('circle',{cx:50,cy:50,r:38,fill:b})+S('circle',{cx:68,cy:36,r:30,fill:'#24243e'})+
+    eyes(32,48,48,48,3)+smile(40,56,4)+blush(24,54,52,56,4)+
+    S('circle',{cx:30,cy:38,r:2,fill:'#fff',opacity:'.3'})+S('circle',{cx:42,cy:64,r:3,fill:'#fff',opacity:'.2'})
+  );
+}
+function svgDiamond(b, highlight) {
+  highlight = highlight || '#fff';
+  return svg(
+    `<polygon points="50,8 82,40 50,92 18,40" fill="${b}"/>`+
+    `<polygon points="50,8 82,40 50,40" fill="${highlight}" opacity=".3"/>`+
+    `<polygon points="50,8 18,40 50,40" fill="${highlight}" opacity=".15"/>`+
+    `<line x1="18" y1="40" x2="82" y2="40" stroke="${highlight}" stroke-width="1" opacity=".5"/>`+
+    eyes(40,44,60,44,3)+smile(50,54,4)+blush(32,50,68,50,4)
+  );
+}
+function svgCrown(b, gem) {
+  gem = gem || '#FF4444';
+  return svg(
+    `<path d="M12,70 L12,40 L30,55 L50,28 L70,55 L88,40 L88,70 Z" fill="${b}"/>`+
+    `<rect x="12" y="66" width="76" height="12" rx="2" fill="${b}"/>`+
+    S('circle',{cx:50,cy:54,r:6,fill:gem})+S('circle',{cx:30,cy:60,r:4,fill:gem})+S('circle',{cx:70,cy:60,r:4,fill:gem})+
+    S('ellipse',{cx:50,cy:52,rx:3,ry:2,fill:'#fff',opacity:'.4'})+
+    S('circle',{cx:50,cy:38,r:4,fill:gem})+S('circle',{cx:30,cy:44,r:3,fill:gem})+S('circle',{cx:70,cy:44,r:3,fill:gem})
+  );
+}
+function svgRainbow() {
+  return svg(
+    `<path d="M10,80 A44,44 0 0,1 90,80" fill="none" stroke="#FF0000" stroke-width="6"/>`+
+    `<path d="M14,80 A40,40 0 0,1 86,80" fill="none" stroke="#FF8C00" stroke-width="5"/>`+
+    `<path d="M18,80 A36,36 0 0,1 82,80" fill="none" stroke="#FFD700" stroke-width="5"/>`+
+    `<path d="M22,80 A32,32 0 0,1 78,80" fill="none" stroke="#4CAF50" stroke-width="5"/>`+
+    `<path d="M26,80 A28,28 0 0,1 74,80" fill="none" stroke="#2196F3" stroke-width="5"/>`+
+    `<path d="M30,80 A24,24 0 0,1 70,80" fill="none" stroke="#9C27B0" stroke-width="5"/>`+
+    S('circle',{cx:18,cy:78,r:10,fill:'#fff'})+S('circle',{cx:82,cy:78,r:10,fill:'#fff'})+
+    eyes(12,76,24,76,2)+eyes(76,76,88,76,2)+smile(18,80,2,1)+smile(82,80,2,1)
+  );
+}
+function svgSnowman() {
+  return svg(
+    S('circle',{cx:50,cy:72,r:24,fill:'#fff',stroke:'#ddd','stroke-width':'1'})+
+    S('circle',{cx:50,cy:42,r:18,fill:'#fff',stroke:'#ddd','stroke-width':'1'})+
+    S('circle',{cx:50,cy:20,r:12,fill:'#fff',stroke:'#ddd','stroke-width':'1'})+
+    eyes(45,18,55,18,2)+`<polygon points="50,22 58,24 50,26" fill="#FF8C00"/>`+smile(50,28,3,1)+
+    S('circle',{cx:50,cy:40,r:2,fill:'#333'})+S('circle',{cx:50,cy:48,r:2,fill:'#333'})+
+    `<rect x="38" y="10" width="24" height="4" rx="1" fill="#333"/><rect x="42" y="4" width="16" height="8" rx="2" fill="#333"/>`+
+    blush(40,24,60,24,2)
+  );
+}
+function svgRocket(b, window) {
+  window = window || '#87CEEB';
+  return svg(
+    `<path d="M50,4 C38,20 32,50 32,70 L68,70 C68,50 62,20 50,4Z" fill="${b}"/>`+
+    S('circle',{cx:50,cy:40,r:12,fill:window})+S('circle',{cx:50,cy:40,r:8,fill:'#E0F0FF'})+
+    `<polygon points="32,70 20,86 32,78" fill="#FF8C00"/><polygon points="68,70 80,86 68,78" fill="#FF8C00"/>`+
+    `<rect x="42" y="70" width="16" height="12" rx="2" fill="#FF4444"/>`+
+    `<polygon points="42,82 38,96 50,88 62,96 58,82" fill="#FFD700" opacity=".8"/>`+
+    eyes(45,38,55,38,2)+smile(50,44,3,1)
+  );
+}
+function svgCrystalBall(b, inner) {
+  inner = inner || '#E8D0FF';
+  return svg(
+    S('circle',{cx:50,cy:44,r:34,fill:b})+S('circle',{cx:50,cy:44,r:30,fill:inner})+
+    S('ellipse',{cx:38,cy:34,rx:8,ry:12,fill:'#fff',opacity:'.3',transform:'rotate(-15,38,34)'})+
+    `<rect x="30" y="76" width="40" height="10" rx="3" fill="#8B6C8B"/>`+
+    `<rect x="26" y="84" width="48" height="6" rx="2" fill="#8B6C8B"/>`+
+    S('circle',{cx:42,cy:42,r:3,fill:'#fff',opacity:'.4'})+S('circle',{cx:58,cy:50,r:2,fill:'#fff',opacity:'.3'})+
+    S('circle',{cx:50,cy:36,r:2,fill:'#fff',opacity:'.5'})+
+    eyes(42,44,58,44,2.5)+smile(50,52,3,1)+blush(34,50,66,50,3)
+  );
+}
+function svgPhoenix(b, wing) {
+  wing = wing || '#FF4500';
+  return svg(
+    S('circle',{cx:50,cy:46,r:22,fill:b})+
+    `<ellipse cx="26" cy="50" rx="22" ry="14" fill="${wing}" transform="rotate(-20,26,50)"/>`+
+    `<ellipse cx="74" cy="50" rx="22" ry="14" fill="${wing}" transform="rotate(20,74,50)"/>`+
+    `<polygon points="46,22 50,6 54,22" fill="#FFD700"/><polygon points="40,24 44,10 48,24" fill="#FF8C00"/><polygon points="52,24 56,10 60,24" fill="#FF8C00"/>`+
+    `<polygon points="36,68 44,90 52,68" fill="${wing}"/><polygon points="48,68 56,90 64,68" fill="${wing}"/>`+
+    eyes(42,42,58,42,3)+`<polygon points="46,50 50,56 54,50" fill="#FF8C00"/>`+blush(32,50,68,50,3)
+  );
+}
+// Rainbow-colored cat for SR
+function svgRainbowCat() {
+  return svg(
+    `<defs><linearGradient id="rc" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="25%" stop-color="#FFD93D"/><stop offset="50%" stop-color="#6BCB77"/><stop offset="75%" stop-color="#4D96FF"/><stop offset="100%" stop-color="#9B59B6"/></linearGradient></defs>`+
+    `<polygon points="18,38 30,6 42,38" fill="url(#rc)"/><polygon points="58,38 70,6 82,38" fill="url(#rc)"/>`+
+    S('circle',{cx:50,cy:56,r:36,fill:'url(#rc)'})+eyes(38,48,62,48)+nose(50,57)+smile(50,63)+
+    blush(28,62,72,62)+
+    `<line x1="12" y1="54" x2="30" y2="56" stroke="#ccc" stroke-width="1.2"/><line x1="12" y1="60" x2="30" y2="60" stroke="#ccc" stroke-width="1.2"/><line x1="70" y1="56" x2="88" y2="54" stroke="#ccc" stroke-width="1.2"/><line x1="70" y1="60" x2="88" y2="60" stroke="#ccc" stroke-width="1.2"/>`
+  );
+}
 
-let state = {
-  points: 0,
-  bestScores: { easy: 0, normal: 0, hard: 0 },
-  medals: [] // array of medal IDs (0-99)
-};
-
-let game = {
-  difficulty: null,
-  cards: [],
-  flipped: [],
-  matched: 0,
-  moves: 0,
-  totalPairs: 0,
-  timeLeft: 0,
-  totalTime: 0,
-  timerId: null,
-  locked: false
-};
-
-let gachaAnimating = false;
-let currentFilter = 'all';
-let lastDifficulty = 'normal';
+/* ================================================================
+   MEDAL DATA (100 medals)
+   ================================================================ */
+const ALL_MEDALS = [
+  // === Normal 0-59 ===
+  // Cats 0-5
+  {id:0,name:'ピンクネコ',rarity:'normal',svg:()=>svgCat('#FFB6C1','#FF69B4')},
+  {id:1,name:'グレーネコ',rarity:'normal',svg:()=>svgCat('#B0B0B0','#D0D0D0')},
+  {id:2,name:'チャトラネコ',rarity:'normal',svg:()=>svgCat('#F4A460','#FFD700')},
+  {id:3,name:'クロネコ',rarity:'normal',svg:()=>svgCat('#4A4A4A','#666')},
+  {id:4,name:'シロネコ',rarity:'normal',svg:()=>svgCat('#F5F5F5','#FCC')},
+  {id:5,name:'ミントネコ',rarity:'normal',svg:()=>svgCat('#98D8C8','#B8E8D8')},
+  // Dogs 6-11
+  {id:6,name:'しばいぬ',rarity:'normal',svg:()=>svgDog('#DEB887','#C4A77D')},
+  {id:7,name:'シロわんこ',rarity:'normal',svg:()=>svgDog('#F5F5F5','#E0E0E0')},
+  {id:8,name:'クロわんこ',rarity:'normal',svg:()=>svgDog('#555','#333')},
+  {id:9,name:'チャわんこ',rarity:'normal',svg:()=>svgDog('#CD853F','#A0522D')},
+  {id:10,name:'グレーわんこ',rarity:'normal',svg:()=>svgDog('#A9A9A9','#808080')},
+  {id:11,name:'モカわんこ',rarity:'normal',svg:()=>svgDog('#D2B48C','#C19A6B')},
+  // Rabbits 12-16
+  {id:12,name:'シロうさぎ',rarity:'normal',svg:()=>svgRabbit('#fff','#FCC')},
+  {id:13,name:'ピンクうさぎ',rarity:'normal',svg:()=>svgRabbit('#FFB6C1','#FF69B4')},
+  {id:14,name:'ブラウンうさぎ',rarity:'normal',svg:()=>svgRabbit('#D2B48C','#FFDAB9')},
+  {id:15,name:'ラベンダーうさぎ',rarity:'normal',svg:()=>svgRabbit('#D8BFD8','#E8D0E8')},
+  {id:16,name:'ミントうさぎ',rarity:'normal',svg:()=>svgRabbit('#B0E0E6','#D0F0F0')},
+  // Bears 17-22
+  {id:17,name:'こぐまちゃん',rarity:'normal',svg:()=>svgBear('#8B6914','#D4A843')},
+  {id:18,name:'しろくま',rarity:'normal',svg:()=>svgBear('#F0F0F0','#fff')},
+  {id:19,name:'パンダ',rarity:'normal',svg:()=>svgBear('#555','#F5F5F5')},
+  {id:20,name:'ピンクくま',rarity:'normal',svg:()=>svgBear('#FFB6C1','#FFF0F5')},
+  {id:21,name:'ミントくま',rarity:'normal',svg:()=>svgBear('#98D8C8','#D0F0E8')},
+  {id:22,name:'ラベンダーくま',rarity:'normal',svg:()=>svgBear('#C8A2C8','#E8D0E8')},
+  // Hamsters 23-26
+  {id:23,name:'ゴールデンハムスター',rarity:'normal',svg:()=>svgHamster('#F0C060','#FFDAB9')},
+  {id:24,name:'ジャンガリアン',rarity:'normal',svg:()=>svgHamster('#D0D0D0','#FFF0F0')},
+  {id:25,name:'キンクマハムスター',rarity:'normal',svg:()=>svgHamster('#F5DEB3','#FFF5E1')},
+  {id:26,name:'パールハムスター',rarity:'normal',svg:()=>svgHamster('#F5F5F5','#FFF0F5')},
+  // Penguins 27-29
+  {id:27,name:'ペンギン',rarity:'normal',svg:()=>svgPenguin('#2C3E50')},
+  {id:28,name:'ロイヤルペンギン',rarity:'normal',svg:()=>svgPenguin('#1a1a3e')},
+  {id:29,name:'アデリーペンギン',rarity:'normal',svg:()=>svgPenguin('#34495E')},
+  // Chicks 30-32
+  {id:30,name:'ひよこ',rarity:'normal',svg:()=>svgChick('#FFD700')},
+  {id:31,name:'ピンクひよこ',rarity:'normal',svg:()=>svgChick('#FFB6C1')},
+  {id:32,name:'そらいろひよこ',rarity:'normal',svg:()=>svgChick('#87CEEB')},
+  // Owls 33-35
+  {id:33,name:'ふくろう',rarity:'normal',svg:()=>svgOwl('#8B6914','#FFF5E1')},
+  {id:34,name:'シロフクロウ',rarity:'normal',svg:()=>svgOwl('#F0F0F0','#fff')},
+  {id:35,name:'ピンクフクロウ',rarity:'normal',svg:()=>svgOwl('#DDA0DD','#FFF0F5')},
+  // Fish 36-38
+  {id:36,name:'あかいおさかな',rarity:'normal',svg:()=>svgFish('#E74C3C','#FF6B6B')},
+  {id:37,name:'あおいおさかな',rarity:'normal',svg:()=>svgFish('#5DADE2','#85C1E9')},
+  {id:38,name:'きいろいおさかな',rarity:'normal',svg:()=>svgFish('#F4D03F','#F9E154')},
+  // Octopus 39-41
+  {id:39,name:'あかいタコ',rarity:'normal',svg:()=>svgOctopus('#E74C3C')},
+  {id:40,name:'ピンクタコ',rarity:'normal',svg:()=>svgOctopus('#E8A0BF')},
+  {id:41,name:'むらさきタコ',rarity:'normal',svg:()=>svgOctopus('#9B59B6')},
+  // Cakes 42-44
+  {id:42,name:'いちごケーキ',rarity:'normal',svg:()=>svgCake('#FFB6C1','#FFF0DB')},
+  {id:43,name:'チョコケーキ',rarity:'normal',svg:()=>svgCake('#8B4513','#D2B48C')},
+  {id:44,name:'ブルーベリーケーキ',rarity:'normal',svg:()=>svgCake('#9B59B6','#E8D0FF')},
+  // Donuts 45-47
+  {id:45,name:'ピンクドーナツ',rarity:'normal',svg:()=>svgDonut('#FFB6C1')},
+  {id:46,name:'チョコドーナツ',rarity:'normal',svg:()=>svgDonut('#5C3317')},
+  {id:47,name:'そらいろドーナツ',rarity:'normal',svg:()=>svgDonut('#87CEEB')},
+  // Ice cream 48-50
+  {id:48,name:'バニラアイス',rarity:'normal',svg:()=>svgIceCream('#FFF8DC')},
+  {id:49,name:'いちごアイス',rarity:'normal',svg:()=>svgIceCream('#FFB6C1')},
+  {id:50,name:'チョコアイス',rarity:'normal',svg:()=>svgIceCream('#8B4513')},
+  // Fruits 51-55
+  {id:51,name:'あかりんご',rarity:'normal',svg:()=>svgFruit('round','#FF4444')},
+  {id:52,name:'あおりんご',rarity:'normal',svg:()=>svgFruit('round','#7CCD7C')},
+  {id:53,name:'いちご',rarity:'normal',svg:()=>svgStrawberry('#FF4444')},
+  {id:54,name:'しろいちご',rarity:'normal',svg:()=>svgStrawberry('#FFF0F0')},
+  {id:55,name:'さくらんぼ',rarity:'normal',svg:()=>svgCherry()},
+  // Flowers 56-59
+  {id:56,name:'ピンクのお花',rarity:'normal',svg:()=>svgFlower('#FFB7C5','#FFE066')},
+  {id:57,name:'きいろのお花',rarity:'normal',svg:()=>svgFlower('#FFE066','#FF8C00')},
+  {id:58,name:'あおいお花',rarity:'normal',svg:()=>svgFlower('#87CEEB','#FFE066')},
+  {id:59,name:'むらさきのお花',rarity:'normal',svg:()=>svgFlower('#DDA0DD','#FFE066')},
+  // === Rare 60-89 ===
+  // Mushrooms 60-62
+  {id:60,name:'あかきのこ',rarity:'rare',svg:()=>svgMushroom('#E74C3C')},
+  {id:61,name:'ブラウンきのこ',rarity:'rare',svg:()=>svgMushroom('#8B6914')},
+  {id:62,name:'ファンシーきのこ',rarity:'rare',svg:()=>svgMushroom('#DDA0DD','#FFF0FF')},
+  // Unicorns 63-65
+  {id:63,name:'ユニコーン',rarity:'rare',svg:()=>svgUnicorn('#fff','#FFD700','#FF69B4')},
+  {id:64,name:'ピンクユニコーン',rarity:'rare',svg:()=>svgUnicorn('#FFE4E1','#FFD700','#FF69B4')},
+  {id:65,name:'ラベンダーユニコーン',rarity:'rare',svg:()=>svgUnicorn('#E6E6FA','#FFD700','#9B59B6')},
+  // Dragons 66-68
+  {id:66,name:'みどりドラゴン',rarity:'rare',svg:()=>svgDragon('#4CAF50','#C8E6C9','#FFD700')},
+  {id:67,name:'あかドラゴン',rarity:'rare',svg:()=>svgDragon('#E74C3C','#FFCDD2','#FFD700')},
+  {id:68,name:'あおドラゴン',rarity:'rare',svg:()=>svgDragon('#2196F3','#BBDEFB','#FFD700')},
+  // Ghosts 69-71
+  {id:69,name:'おばけちゃん',rarity:'rare',svg:()=>svgGhost('#F5F5F5')},
+  {id:70,name:'ピンクおばけ',rarity:'rare',svg:()=>svgGhost('#FFB6C1')},
+  {id:71,name:'そらいろおばけ',rarity:'rare',svg:()=>svgGhost('#B0E0E6')},
+  // Slimes 72-74
+  {id:72,name:'みどりスライム',rarity:'rare',svg:()=>svgSlime('#4CAF50')},
+  {id:73,name:'あおスライム',rarity:'rare',svg:()=>svgSlime('#5DADE2')},
+  {id:74,name:'ピンクスライム',rarity:'rare',svg:()=>svgSlime('#FF69B4')},
+  // Fairies 75-77
+  {id:75,name:'グリーンフェアリー',rarity:'rare',svg:()=>svgFairy('#4CAF50','#C8E6C9')},
+  {id:76,name:'ピンクフェアリー',rarity:'rare',svg:()=>svgFairy('#FF69B4','#FFE4E8')},
+  {id:77,name:'ブルーフェアリー',rarity:'rare',svg:()=>svgFairy('#5DADE2','#E3F2FD')},
+  // Mermaids 78-80
+  {id:78,name:'にんぎょひめ',rarity:'rare',svg:()=>svgMermaid('#FF69B4','#2196F3')},
+  {id:79,name:'オーシャンにんぎょ',rarity:'rare',svg:()=>svgMermaid('#8B4513','#00BCD4')},
+  {id:80,name:'パールにんぎょ',rarity:'rare',svg:()=>svgMermaid('#DAA520','#9C27B0')},
+  // Stars 81-82
+  {id:81,name:'きんぼし',rarity:'rare',svg:()=>svgStar('#FFD700')},
+  {id:82,name:'ぎんぼし',rarity:'rare',svg:()=>svgStar('#C0C0C0')},
+  // Moons 83-84
+  {id:83,name:'きいろいおつきさま',rarity:'rare',svg:()=>svgMoon('#FFE87C')},
+  {id:84,name:'ブルームーン',rarity:'rare',svg:()=>svgMoon('#B0C4DE')},
+  // Diamonds 85-87
+  {id:85,name:'ブルーダイヤ',rarity:'rare',svg:()=>svgDiamond('#87CEEB')},
+  {id:86,name:'ピンクダイヤ',rarity:'rare',svg:()=>svgDiamond('#FFB6C1')},
+  {id:87,name:'パープルダイヤ',rarity:'rare',svg:()=>svgDiamond('#DDA0DD')},
+  // Others 88-89
+  {id:88,name:'にじ',rarity:'rare',svg:()=>svgRainbow()},
+  {id:89,name:'ゆきだるま',rarity:'rare',svg:()=>svgSnowman()},
+  // === SR 90-99 ===
+  {id:90,name:'にじネコ',rarity:'sr',svg:()=>svgRainbowCat()},
+  {id:91,name:'きんのしばいぬ',rarity:'sr',svg:()=>svgDog('#FFD700','#DAA520')},
+  {id:92,name:'ほしのうさぎ',rarity:'sr',svg:()=>svgRabbit('#FFD700','#FFF8DC')},
+  {id:93,name:'ゆめのユニコーン',rarity:'sr',svg:()=>svgUnicorn('#FFE4E1','#FF69B4','#9B59B6')},
+  {id:94,name:'てんくうのドラゴン',rarity:'sr',svg:()=>svgDragon('#FFD700','#FFF8DC','#FF4500')},
+  {id:95,name:'フェニックス',rarity:'sr',svg:()=>svgPhoenix('#FF4500','#FFD700')},
+  {id:96,name:'こおりのフェニックス',rarity:'sr',svg:()=>svgPhoenix('#87CEEB','#E0F7FA')},
+  {id:97,name:'にじいろダイヤ',rarity:'sr',svg:()=>svgDiamond('#FFB6C1','#87CEEB')},
+  {id:98,name:'おうごんのおうかん',rarity:'sr',svg:()=>svgCrown('#FFD700','#FF4444')},
+  {id:99,name:'すいしょうだま',rarity:'sr',svg:()=>svgCrystalBall('#9B59B6','#E8D0FF')},
+].map((m,i) => ({...m, no: i+1, rarityLabel: m.rarity==='sr'?'SR':m.rarity==='rare'?'Rare':'Normal'}));
 
 /* ================================================================
    PERSISTENCE
@@ -413,13 +991,10 @@ function loadState() {
     }
   } catch(e) {}
 }
-
-function saveState() {
-  localStorage.setItem('memory_game_state', JSON.stringify(state));
-}
+function saveState() { localStorage.setItem('memory_game_state', JSON.stringify(state)); }
 
 /* ================================================================
-   SCREEN NAVIGATION
+   SCREEN NAV
    ================================================================ */
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -428,16 +1003,14 @@ function showScreen(id) {
   if (id === 'gacha') refreshGacha();
   if (id === 'collection') refreshCollection();
 }
-
 function refreshStart() {
   document.getElementById('start-points').textContent = state.points;
-  const bs = document.getElementById('best-scores');
   let html = '<strong>ベストスコア</strong>';
   for (const key of ['easy','normal','hard']) {
     const s = state.bestScores[key];
     html += `<div>${DIFFICULTY[key].label}: ${s > 0 ? s + 'pt' : '---'}</div>`;
   }
-  bs.innerHTML = html;
+  document.getElementById('best-scores').innerHTML = html;
 }
 
 /* ================================================================
@@ -454,82 +1027,50 @@ function startGame(diff) {
   game.totalTime = cfg.time;
   game.flipped = [];
   game.locked = false;
-
-  // Pick emojis and create pairs
-  const picked = shuffle([...EMOJIS]).slice(0, cfg.pairs);
+  const indices = Array.from({length: CARD_DESIGNS.length}, (_, i) => i);
+  const picked = shuffle(indices).slice(0, cfg.pairs);
   game.cards = shuffle([...picked, ...picked]);
-
   buildGrid(cfg);
   updateGameUI();
   showScreen('game');
   startTimer();
 }
-
 function buildGrid(cfg) {
   const grid = document.getElementById('card-grid');
   grid.className = 'card-grid grid-' + cfg.cols + 'x' + cfg.rows;
   grid.innerHTML = '';
-  game.cards.forEach((emoji, i) => {
+  game.cards.forEach((cardIdx, i) => {
     const cell = document.createElement('div');
     cell.className = 'card-cell';
-    cell.innerHTML = `
-      <div class="card" data-index="${i}" onclick="flipCard(this)">
-        <div class="card-face card-back"></div>
-        <div class="card-face card-front">${emoji}</div>
-      </div>`;
+    cell.innerHTML = `<div class="card" data-index="${i}" onclick="flipCard(this)"><div class="card-face card-back"></div><div class="card-face card-front">${CARD_DESIGNS[cardIdx]()}</div></div>`;
     grid.appendChild(cell);
   });
 }
-
 function flipCard(el) {
-  const idx = parseInt(el.dataset.index);
   if (game.locked) return;
   if (el.classList.contains('flipped') || el.classList.contains('matched')) return;
   if (game.flipped.length >= 2) return;
-
   el.classList.add('flipped');
   game.flipped.push(el);
-
   if (game.flipped.length === 2) {
     game.moves++;
     document.getElementById('moves-text').textContent = game.moves;
     const [a, b] = game.flipped;
-    const iA = parseInt(a.dataset.index);
-    const iB = parseInt(b.dataset.index);
-
+    const iA = parseInt(a.dataset.index), iB = parseInt(b.dataset.index);
     if (game.cards[iA] === game.cards[iB]) {
-      a.classList.add('matched');
-      b.classList.add('matched');
-      game.matched++;
-      game.flipped = [];
-      if (game.matched === game.totalPairs) {
-        clearInterval(game.timerId);
-        setTimeout(showClear, 400);
-      }
+      a.classList.add('matched'); b.classList.add('matched');
+      game.matched++; game.flipped = [];
+      if (game.matched === game.totalPairs) { clearInterval(game.timerId); setTimeout(showClear, 400); }
     } else {
       game.locked = true;
-      setTimeout(() => {
-        a.classList.remove('flipped');
-        b.classList.remove('flipped');
-        game.flipped = [];
-        game.locked = false;
-      }, 900);
+      setTimeout(() => { a.classList.remove('flipped'); b.classList.remove('flipped'); game.flipped = []; game.locked = false; }, 900);
     }
   }
 }
-
 function startTimer() {
   clearInterval(game.timerId);
-  game.timerId = setInterval(() => {
-    game.timeLeft--;
-    updateGameUI();
-    if (game.timeLeft <= 0) {
-      clearInterval(game.timerId);
-      showGameOver();
-    }
-  }, 1000);
+  game.timerId = setInterval(() => { game.timeLeft--; updateGameUI(); if (game.timeLeft <= 0) { clearInterval(game.timerId); showGameOver(); } }, 1000);
 }
-
 function updateGameUI() {
   document.getElementById('timer-text').textContent = game.timeLeft;
   document.getElementById('moves-text').textContent = game.moves;
@@ -540,7 +1081,6 @@ function updateGameUI() {
   if (game.timeLeft <= 10) bar.classList.add('danger');
   else if (pct <= 30) bar.classList.add('warning');
 }
-
 function showClear() {
   const cfg = DIFFICULTY[game.difficulty];
   const timeBonus = game.timeLeft;
@@ -548,7 +1088,6 @@ function showClear() {
   state.points += pts;
   if (pts > state.bestScores[game.difficulty]) state.bestScores[game.difficulty] = pts;
   saveState();
-
   document.getElementById('clear-diff').textContent = cfg.label;
   document.getElementById('clear-moves').textContent = game.moves;
   document.getElementById('clear-time').textContent = timeBonus + '秒';
@@ -558,7 +1097,6 @@ function showClear() {
   document.getElementById('clear-cumulative').textContent = state.points;
   showScreen('clear');
 }
-
 function showGameOver() {
   const cfg = DIFFICULTY[game.difficulty];
   document.getElementById('go-diff').textContent = cfg.label;
@@ -566,111 +1104,31 @@ function showGameOver() {
   document.getElementById('go-pairs').textContent = game.matched + ' / ' + game.totalPairs;
   showScreen('gameover');
 }
-
 function replayGame() { startGame(lastDifficulty); }
-
-function confirmQuit() {
-  if (confirm('ゲームをやめますか？')) {
-    clearInterval(game.timerId);
-    showScreen('start');
-  }
-}
+function confirmQuit() { if (confirm('ゲームをやめますか？')) { clearInterval(game.timerId); showScreen('start'); } }
+function shuffle(arr) { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
 
 /* ================================================================
-   SHUFFLE (Fisher-Yates)
+   MEDAL DISPLAY
    ================================================================ */
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-/* ================================================================
-   MEDAL DATA (100 medals: 10 colors × 10 patterns)
-   ================================================================ */
-const ALL_MEDALS = [];
-(function generateMedals() {
-  let id = 0;
-  for (let c = 0; c < 10; c++) {
-    for (let p = 0; p < 10; p++) {
-      let rarity, rarityLabel;
-      // First 60 = Normal, next 30 = Rare, last 10 = SR
-      if (id < 60) { rarity = 'normal'; rarityLabel = 'Normal'; }
-      else if (id < 90) { rarity = 'rare'; rarityLabel = 'Rare'; }
-      else { rarity = 'sr'; rarityLabel = 'SR'; }
-      ALL_MEDALS.push({
-        id, colorIdx: c, patternIdx: p, rarity, rarityLabel,
-        name: MEDAL_COLORS[c].toUpperCase().slice(1) + '-' + MEDAL_PATTERN_NAMES[p],
-        color: MEDAL_COLORS[c]
-      });
-      id++;
-    }
-  }
-})();
-
-/* ================================================================
-   MEDAL CSS-ART RENDERING
-   ================================================================ */
-function renderMedalCSS(medal, size) {
-  size = size || 120;
-  const c = medal.color;
-  const c2 = lighten(c, 40);
-  const patterns = [
-    /* 0: 放射 */
-    `background: conic-gradient(${c} 0deg, ${c2} 30deg, ${c} 60deg, ${c2} 90deg, ${c} 120deg, ${c2} 150deg, ${c} 180deg, ${c2} 210deg, ${c} 240deg, ${c2} 270deg, ${c} 300deg, ${c2} 330deg, ${c} 360deg);`,
-    /* 1: 同心円 */
-    `background: repeating-radial-gradient(circle at center, ${c} 0px, ${c} ${size*0.08}px, ${c2} ${size*0.08}px, ${c2} ${size*0.16}px);`,
-    /* 2: ストライプ */
-    `background: repeating-linear-gradient(45deg, ${c} 0px, ${c} ${size*0.1}px, ${c2} ${size*0.1}px, ${c2} ${size*0.2}px);`,
-    /* 3: ドット */
-    `background: ${c}; background-image: radial-gradient(${c2} ${size*0.1}px, transparent ${size*0.1}px); background-size: ${size*0.25}px ${size*0.25}px;`,
-    /* 4: チェック */
-    `background-color: ${c}; background-image: linear-gradient(45deg, ${c2} 25%, transparent 25%, transparent 75%, ${c2} 75%), linear-gradient(45deg, ${c2} 25%, transparent 25%, transparent 75%, ${c2} 75%); background-size: ${size*0.25}px ${size*0.25}px; background-position: 0 0, ${size*0.125}px ${size*0.125}px;`,
-    /* 5: 波 */
-    `background: ${c}; background-image: repeating-linear-gradient(0deg, transparent, transparent ${size*0.1}px, ${c2} ${size*0.1}px, ${c2} ${size*0.12}px), repeating-linear-gradient(90deg, transparent, transparent ${size*0.2}px, ${c2} ${size*0.2}px, ${c2} ${size*0.22}px);`,
-    /* 6: 菱形 */
-    `background: ${c}; background-image: linear-gradient(45deg, ${c2} 25%, transparent 25%), linear-gradient(-45deg, ${c2} 25%, transparent 25%), linear-gradient(135deg, ${c2} 25%, transparent 25%), linear-gradient(-135deg, ${c2} 25%, transparent 25%); background-size: ${size*0.25}px ${size*0.25}px; background-position: 0 0, 0 ${size*0.125}px, ${size*0.125}px -${size*0.125}px, -${size*0.125}px 0;`,
-    /* 7: 星形 */
-    `background: conic-gradient(from 0deg at 50% 50%, ${c} 0deg, ${c2} 36deg, ${c} 72deg, ${c2} 108deg, ${c} 144deg, ${c2} 180deg, ${c} 216deg, ${c2} 252deg, ${c} 288deg, ${c2} 324deg, ${c} 360deg);`,
-    /* 8: 渦巻き */
-    `background: repeating-conic-gradient(from 0deg, ${c} 0deg 10deg, ${c2} 10deg 20deg);`,
-    /* 9: 格子 */
-    `background: ${c}; background-image: linear-gradient(${c2} ${size*0.04}px, transparent ${size*0.04}px), linear-gradient(90deg, ${c2} ${size*0.04}px, transparent ${size*0.04}px); background-size: ${size*0.2}px ${size*0.2}px;`
-  ];
-  return patterns[medal.patternIdx] || patterns[0];
-}
-
-function lighten(hex, amt) {
-  let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-  r = Math.min(255, r + amt); g = Math.min(255, g + amt); b = Math.min(255, b + amt);
-  return '#' + [r,g,b].map(v => v.toString(16).padStart(2,'0')).join('');
-}
-
 function createMedalElement(medal, size) {
   size = size || 120;
   const div = document.createElement('div');
   div.className = 'medal-display rarity-' + medal.rarity;
-  div.style.width = size + 'px';
-  div.style.height = size + 'px';
-  const pat = document.createElement('div');
-  pat.className = 'medal-pattern';
-  pat.style.cssText = renderMedalCSS(medal, size);
-  div.appendChild(pat);
+  div.style.width = size + 'px'; div.style.height = size + 'px';
+  div.innerHTML = medal.svg();
   return div;
 }
 
 /* ================================================================
-   GACHA SYSTEM
+   GACHA
    ================================================================ */
 function refreshGacha() {
   document.getElementById('gacha-points').textContent = state.points;
-  document.getElementById('gacha-btn').disabled = state.points < 1000;
+  document.getElementById('gacha-btn').disabled = state.points < GACHA_COST;
   document.getElementById('gacha-result').classList.remove('show');
   resetCapsule();
 }
-
 function resetCapsule() {
   const stage = document.getElementById('gacha-stage');
   stage.classList.remove('spinning', 'opening');
@@ -678,70 +1136,50 @@ function resetCapsule() {
   document.getElementById('capsule-top').style.transform = '';
   document.getElementById('capsule-top').style.opacity = '';
 }
-
 function pullGacha() {
-  if (gachaAnimating || state.points < 1000) return;
+  if (gachaAnimating || state.points < GACHA_COST) return;
   gachaAnimating = true;
-  state.points -= 1000;
+  state.points -= GACHA_COST;
   saveState();
   document.getElementById('gacha-points').textContent = state.points;
   document.getElementById('gacha-result').classList.remove('show');
   resetCapsule();
-
   const stage = document.getElementById('gacha-stage');
   stage.style.display = 'flex';
   stage.classList.add('spinning');
-
   setTimeout(() => {
     stage.classList.remove('spinning');
     stage.classList.add('opening');
-
-    // Determine rarity
     const roll = Math.random() * 100;
     let rarity;
     if (roll < 5) rarity = 'sr';
     else if (roll < 30) rarity = 'rare';
     else rarity = 'normal';
-
-    // Pick medal of that rarity
     const pool = ALL_MEDALS.filter(m => m.rarity === rarity);
     const medal = pool[Math.floor(Math.random() * pool.length)];
-
-    // Flash effect
     if (rarity === 'rare' || rarity === 'sr') {
       const flash = document.getElementById('gacha-flash');
       flash.className = 'gacha-flash show ' + (rarity === 'sr' ? 'sr-flash' : 'rare-flash');
       setTimeout(() => flash.classList.remove('show'), rarity === 'sr' ? 1000 : 600);
     }
-
     setTimeout(() => {
       stage.style.display = 'none';
-      // Check duplicate
       const isNew = !state.medals.includes(medal.id);
-      if (isNew) {
-        state.medals.push(medal.id);
-      } else {
-        state.points += 100;
-      }
+      if (isNew) { state.medals.push(medal.id); } else { state.points += DUPLICATE_REFUND; }
       saveState();
       document.getElementById('gacha-points').textContent = state.points;
-      document.getElementById('gacha-btn').disabled = state.points < 1000;
-
-      // Show result
+      document.getElementById('gacha-btn').disabled = state.points < GACHA_COST;
       const resultDiv = document.getElementById('gacha-result');
       const displayDiv = document.getElementById('gacha-medal-display');
       displayDiv.innerHTML = '';
       displayDiv.appendChild(createMedalElement(medal, 120));
+      document.getElementById('gacha-medal-no').textContent = 'No.' + medal.no;
       document.getElementById('gacha-medal-name').textContent = medal.name;
-      const rarLabel = document.getElementById('gacha-medal-rarity');
-      rarLabel.textContent = medal.rarityLabel;
-      rarLabel.className = 'medal-rarity-label ' + medal.rarity;
-      const badge = document.getElementById('gacha-badge');
-      if (isNew) {
-        badge.innerHTML = '<div class="new-badge">NEW!</div>';
-      } else {
-        badge.innerHTML = '<div class="dup-badge">獲得済み +100pt返還</div>';
-      }
+      const rl = document.getElementById('gacha-medal-rarity');
+      rl.textContent = medal.rarityLabel; rl.className = 'medal-rarity-label ' + medal.rarity;
+      document.getElementById('gacha-badge').innerHTML = isNew
+        ? '<div class="new-badge">NEW!</div>'
+        : `<div class="dup-badge">獲得済み +${DUPLICATE_REFUND}pt返還</div>`;
       resultDiv.classList.add('show');
       gachaAnimating = false;
     }, 600);
@@ -752,55 +1190,52 @@ function pullGacha() {
    COLLECTION
    ================================================================ */
 function refreshCollection() {
-  const owned = state.medals.length;
-  document.getElementById('collection-progress').textContent = owned + ' / 100';
+  document.getElementById('collection-progress').textContent = state.medals.length + ' / 100';
   renderCollectionGrid();
 }
-
 function renderCollectionGrid() {
   const grid = document.getElementById('collection-grid');
   grid.innerHTML = '';
-  const filtered = currentFilter === 'all'
-    ? ALL_MEDALS
-    : ALL_MEDALS.filter(m => m.rarity === currentFilter);
-
+  const filtered = currentFilter === 'all' ? ALL_MEDALS : ALL_MEDALS.filter(m => m.rarity === currentFilter);
   filtered.forEach(medal => {
     const owned = state.medals.includes(medal.id);
+    const cell = document.createElement('div');
+    cell.className = 'collection-cell';
     const item = document.createElement('div');
     item.className = 'collection-item rarity-' + medal.rarity + (owned ? '' : ' locked');
-
-    const pat = document.createElement('div');
-    pat.className = 'medal-pattern';
-    pat.style.cssText = renderMedalCSS(medal, 90);
-    item.appendChild(pat);
-
+    item.innerHTML = medal.svg();
+    if (owned) item.onclick = () => showMedalDetail(medal);
+    cell.appendChild(item);
+    const noLabel = document.createElement('div');
+    noLabel.className = 'collection-no';
+    noLabel.textContent = 'No.' + medal.no;
+    cell.appendChild(noLabel);
     if (owned) {
-      item.onclick = () => showMedalDetail(medal);
+      const nameLabel = document.createElement('div');
+      nameLabel.className = 'collection-name';
+      nameLabel.textContent = medal.name;
+      cell.appendChild(nameLabel);
     }
-    grid.appendChild(item);
+    grid.appendChild(cell);
   });
 }
-
 function filterCollection(filter, btnEl) {
   currentFilter = filter;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   if (btnEl) btnEl.classList.add('active');
   renderCollectionGrid();
 }
-
 function showMedalDetail(medal) {
   const modal = document.getElementById('medal-modal');
-  const displayDiv = document.getElementById('modal-medal-display');
-  displayDiv.innerHTML = '';
-  displayDiv.appendChild(createMedalElement(medal, 160));
+  const dd = document.getElementById('modal-medal-display');
+  dd.innerHTML = '';
+  dd.appendChild(createMedalElement(medal, 160));
+  document.getElementById('modal-medal-no').textContent = 'No.' + medal.no;
   document.getElementById('modal-medal-name').textContent = medal.name;
-  const rarLabel = document.getElementById('modal-medal-rarity');
-  rarLabel.textContent = medal.rarityLabel;
-  rarLabel.className = 'medal-rarity-label ' + medal.rarity;
-  document.getElementById('modal-medal-id').textContent = 'No. ' + (medal.id + 1);
+  const rl = document.getElementById('modal-medal-rarity');
+  rl.textContent = medal.rarityLabel; rl.className = 'medal-rarity-label ' + medal.rarity;
   modal.classList.add('show');
 }
-
 function closeMedalModal(e) {
   if (e && e.target !== e.currentTarget && !e.target.classList.contains('modal-close')) return;
   document.getElementById('medal-modal').classList.remove('show');
